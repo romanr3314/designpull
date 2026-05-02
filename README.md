@@ -26,11 +26,13 @@ The output format follows the **Google Stitch DESIGN.md open specification** (Ap
 ## Features
 
 - **Full page scroll capture** — scrolls the entire page, stitches screenshots, sends it all to the AI
+- **Current View mode** — skip the scroll loop and capture only what's visible in the viewport
 - **AI vision + CSS tokens** — combines computed styles with visual analysis for accurate results
 - **Multi-provider support** — Gemini, OpenAI, Claude, or Ollama (local, free)
 - **Bring your own API key** — keys stay in your browser, never leave your machine
 - **Model picker** — lists available models from your provider after entering your key
 - **Platform detection** — detects Squarespace, Webflow, Shopify etc and flags internal CSS variables
+- **Generation history** — saves the last 20 generated `design.md` files with page title, URL, and date; click any entry to restore it
 - **Google Stitch spec compatible** — output follows the official open DESIGN.md specification
 - **Copy & download** — one click to copy or save the generated file
 - **Zero backend** — no server, no cost to run, no account needed
@@ -96,10 +98,12 @@ Then in Chrome:
    - Enter your API key
    - Click **Load Models** to populate the model dropdown
    - Select your preferred model
+   - Choose **Capture Mode**: *Full Page* (default) or *Current View*
    - Save
 4. Click **Extract & Generate**
-5. Wait 10–30 seconds while it scrolls, captures, and generates
+5. Wait 10–30 seconds while it captures and generates
 6. Copy or download your `DESIGN.md`
+7. Access previous results anytime via the 🕐 **History** button
 
 ---
 
@@ -142,15 +146,19 @@ designpull/
 
 ```
 1. User clicks Extract & Generate
-2. content.js injected into active tab
-3. Extracts computed styles from 50-100 DOM elements
-   (colors, fonts, spacing, shadows, border radius, transitions)
-4. background.js scrolls the full page and stitches screenshots
+2. Capture Mode is read from storage
+3. extractor.js injected into the active tab
+   - In Full Page mode: samples all DOM elements (up to 150)
+   - In Current View mode: filters to elements visible in the viewport only
+4. Screenshot captured:
+   - Full Page: background.js scrolls and stitches up to 10 viewport-height strips
+   - Current View: single captureVisibleTab() call, no scrolling
 5. Full-page image resized to max 2000px longest dimension
 6. Tokens + screenshot sent to selected AI provider
 7. AI generates DESIGN.md using the refined prompt
 8. Output streams back into the popup
-9. User copies or downloads the file
+9. Completed result is auto-saved to History (last 20 entries)
+10. User copies, downloads, or revisits via History
 ```
 
 ---

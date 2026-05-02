@@ -9,8 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Elements
   const screenSettings = document.getElementById('settings-screen');
   const screenMain = document.getElementById('main-screen');
+  const screenHistory = document.getElementById('history-screen');
 
   const btnBack = document.getElementById('back-btn');
+  const btnHistory = document.getElementById('open-history');
+  const btnBackHistory = document.getElementById('back-history-btn');
+  const btnClearHistory = document.getElementById('clear-history');
   const btnSettings = document.getElementById('open-settings');
   const btnSaveSettings = document.getElementById('save-settings');
   const btnGenerate = document.getElementById('generate-btn');
@@ -27,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const inputModelCustom = document.getElementById('model-custom');
   const inputApiKey = document.getElementById('api-key');
   const inputBaseUrl = document.getElementById('base-url');
+  const inputCaptureMode = document.getElementById('capture-mode');
 
   const containerApiKey = document.getElementById('api-key-container');
   const containerBaseUrl = document.getElementById('base-url-container');
@@ -37,6 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const elLoadingText = document.getElementById('loading-text');
   const elOutputContainer = document.getElementById('output-container');
   const elOutput = document.getElementById('output');
+  const elHistoryList = document.getElementById('history-list');
+
+  let currentGenerationInfo = null;
 
   // --- Toast System --- //
   const elToast = document.getElementById('toast');
@@ -52,11 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Initialization --- //
 
-  chrome.storage.local.get(['provider', 'model', 'apiKey', 'baseUrl'], (data) => {
+  chrome.storage.local.get(['provider', 'model', 'apiKey', 'baseUrl', 'captureMode'], (data) => {
     const provider = data.provider || 'Gemini';
     inputProvider.value = provider;
     inputApiKey.value = data.apiKey || '';
     inputBaseUrl.value = data.baseUrl || 'http://localhost:11434';
+    if (inputCaptureMode) {
+      inputCaptureMode.value = data.captureMode || 'full';
+    }
 
     // Set the default model in the dropdown
     populateModelDropdown([data.model || DEFAULT_MODELS[provider]]);
@@ -178,6 +189,24 @@ document.addEventListener('DOMContentLoaded', () => {
     screenMain.classList.remove('hidden');
   });
 
+  btnHistory.addEventListener('click', () => {
+    screenMain.classList.add('hidden');
+    screenHistory.classList.remove('hidden');
+    renderHistory();
+  });
+
+  btnBackHistory.addEventListener('click', () => {
+    screenHistory.classList.add('hidden');
+    screenMain.classList.remove('hidden');
+  });
+
+  btnClearHistory.addEventListener('click', () => {
+    chrome.storage.local.set({ designHistory: [] }, () => {
+      renderHistory();
+      showToast('History cleared', 'success');
+    });
+  });
+
   // Save settings
   btnSaveSettings.addEventListener('click', () => {
     const selectedModel = inputModelCustom.value.trim() || inputModel.value;
@@ -185,7 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
       provider: inputProvider.value,
       model: selectedModel,
       apiKey: inputApiKey.value,
-      baseUrl: inputBaseUrl.value
+      baseUrl: inputBaseUrl.value,
+      captureMode: inputCaptureMode ? inputCaptureMode.value : 'full'
     };
     chrome.storage.local.set(config, () => {
       updateHeader(config.provider, config.model);
@@ -232,6 +262,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       if (!tab) throw new Error('No active tab found.');
 
+      currentGenerationInfo = {
+        title: tab.title,
+        url: tab.url,
+        timestamp: Date.now()
+      };
+
+      const data = await chrome.storage.local.get(['provider', 'model', 'apiKey', 'baseUrl', 'captureMode']);
+      const captureMode = data.captureMode || 'full';
+
+      await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: (mode) => { window.__designpullCaptureMode = mode; },
+        args: [captureMode]
+      });
+
       const results = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         files: ['lib/extractor.js']
@@ -240,18 +285,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const tokens = results[0]?.result;
       if (!tokens) throw new Error('Failed to extract tokens from the page.');
 
-      elLoadingText.textContent = 'Capturing full page screenshot…';
-
       let screenshotBase64 = null;
       try {
-        screenshotBase64 = await captureFullPageScreenshot(tab.id);
+        if (captureMode === 'view') {
+          elLoadingText.textContent = 'Capturing current view…';
+          screenshotBase64 = await chrome.tabs.captureVisibleTab(null, { format: 'jpeg', quality: 85 });
+        } else {
+          elLoadingText.textContent = 'Capturing full page screenshot…';
+          screenshotBase64 = await captureFullPageScreenshot(tab.id);
+        }
       } catch (err) {
         console.warn('Screenshot failed:', err);
       }
 
       elLoadingText.textContent = 'Sending to AI…';
-
-      const data = await chrome.storage.local.get(['provider', 'model', 'apiKey', 'baseUrl']);
 
       chrome.runtime.sendMessage({
         type: 'GENERATE',
@@ -281,6 +328,13 @@ document.addEventListener('DOMContentLoaded', () => {
       resetUI();
       btnGenerateText.textContent = 'Regenerate';
       showToast('design.md generated successfully', 'success');
+
+      if (currentGenerationInfo) {
+        saveToHistory({
+          ...currentGenerationInfo,
+          markdown: elOutput.value
+        });
+      }
     } else if (msg.type === 'ERROR') {
       resetUI();
       elOutputContainer.classList.add('hidden');
@@ -318,6 +372,59 @@ document.addEventListener('DOMContentLoaded', () => {
   function resetUI() {
     elLoading.classList.add('hidden');
     btnGenerate.classList.remove('hidden');
+  }
+
+  // --- History System --- //
+  function renderHistory() {
+    chrome.storage.local.get(['designHistory'], (data) => {
+      const history = data.designHistory || [];
+      elHistoryList.innerHTML = '';
+      
+      if (history.length === 0) {
+        elHistoryList.innerHTML = '<div class="history-empty">No history yet</div>';
+        return;
+      }
+      
+      history.forEach((item) => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `
+          <div class="history-item-header">
+            <span class="history-item-title">${escapeHTML(item.title || 'Unknown Page')}</span>
+            <span class="history-item-date">${new Date(item.timestamp).toLocaleDateString()}</span>
+          </div>
+          <div class="history-item-url">${escapeHTML(item.url || '')}</div>
+        `;
+        div.addEventListener('click', () => {
+          elOutput.value = item.markdown;
+          elOutputContainer.classList.remove('hidden');
+          screenHistory.classList.add('hidden');
+          screenMain.classList.remove('hidden');
+        });
+        elHistoryList.appendChild(div);
+      });
+    });
+  }
+
+  function saveToHistory(item) {
+    chrome.storage.local.get(['designHistory'], (data) => {
+      let history = data.designHistory || [];
+      history.unshift(item);
+      if (history.length > 20) history = history.slice(0, 20);
+      chrome.storage.local.set({ designHistory: history });
+    });
+  }
+
+  function escapeHTML(str) {
+    return str.replace(/[&<>'"]/g, 
+      tag => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          "'": '&#39;',
+          '"': '&quot;'
+        }[tag] || tag)
+    );
   }
 
   // --- Screenshot Stitching Logic --- //
